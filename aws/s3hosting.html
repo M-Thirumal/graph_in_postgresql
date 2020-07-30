@@ -1,0 +1,41 @@
+<p>Host static website using S3<p>
+
+
+    Create two S3 bucket with your domain name (www and non-www)
+
+    example.com
+
+    www.example.com
+
+    Configure non-www bucket to redirect to www bucket
+
+    Upload your web content to www bucket
+
+    Configure www bucket for web-hosting by selecting static website hosting
+
+    Make www bucket as public and add the below policy
+<xmp>
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect":"Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::www.example.com/*"
+        }
+    ]
+}
+<xmp>
+    Create AWS route53 public hosted zone with the same name as the domain name (Non-WWW).
+
+    Update GoDaddy NS with AWS provided NS (without ending dot(.).
+
+    In AWS Route53
+
+    create A Type recordset for the non-www domain and select Alias Checkbox to Yes and point it to S3 main bucket
+
+    create A Type recordset for www subdomain and point to S3 www bucket.
+
+    Access your website from browser
